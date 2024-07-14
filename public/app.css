@@ -1,0 +1,27 @@
+body {
+    margin: 0;
+    background-color: #eee;
+    font-family: sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+nav > ul {
+    padding: 20px;
+    margin: 0;
+    display: flex;
+    gap: 20px;
+    list-style: none;
+    border-bottom: 1px solid #ccc;
+}
+
+main {
+    padding: 0 20px;
+    flex-grow: 1;
+}
+
+footer {
+    border-top: 1px solid #ccc;
+    padding: 20px;
+}
