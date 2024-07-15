@@ -10,8 +10,8 @@ use App\Service\LoggerServiceProvider;
 use App\Service\RouterServiceProvider;
 use App\Service\TemplateServiceProvider;
 use League\Container\Container as Psr11Container;
-use Twig\Environment as TemplateEngine;
 use Psr\Log\LoggerAwareInterface;
+use Twig\Environment as TemplateEngine;
 
 class AppContainer
 {
