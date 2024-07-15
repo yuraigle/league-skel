@@ -26,13 +26,22 @@ abstract class AbstractController implements LoggerAwareInterface
         $this->template = $template;
     }
 
-    /**
-     * @throws SyntaxError | RuntimeError | LoaderError
-     */
     protected function render($view, $args = []): Psr7Response
     {
-        $html = $this->template->render($view, $args);
+        try {
+            $html = $this->template->render($view, $args);
 
-        return new HtmlResponse($html);
+            return new HtmlResponse($html);
+        } catch (LoaderError | RuntimeError | SyntaxError $e) {
+            $this->logger->error($e->getMessage());
+
+            try {
+                $html = $this->template->render('error/500.twig');
+            } catch (LoaderError | RuntimeError | SyntaxError) {
+                $html = "500 Internal Server Error";
+            }
+
+            return new HtmlResponse($html, 500);
+        }
     }
 }

@@ -16,6 +16,10 @@ use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 
+$_ENV['ROOT'] = dirname(__DIR__);
+$dotenv       = Dotenv\Dotenv::createImmutable($_ENV['ROOT']);
+$dotenv->load();
+
 $container = App\Component\AppContainer::initContainer();
 $router    = $container->get(LeagueRouter::class);
 $log       = $container->get(Monolog\Logger::class);
@@ -29,14 +33,17 @@ $router->get('/hello/{name}', [HomeController::class, 'hello']);
 
 // Dispatch
 $request = ServerRequestFactory::fromGlobals();
+
 try {
     $response = $router->dispatch($request);
 } catch (NotFoundException $e) {
     try {
-        $response = new HtmlResponse($template->render('error/404.twig'), 404);
-    } catch (LoaderError | RuntimeError | SyntaxError $e) {
-        $response = new HtmlResponse("404 Not Found", 404);
+        $html = $template->render('error/404.twig');
+    } catch (LoaderError | RuntimeError | SyntaxError) {
+        $html = "404 Not Found";
     }
+
+    $response = new HtmlResponse($html, 404);
 } catch (Throwable $e) {
     $log->error(
         $e->getMessage() . PHP_EOL . $e->getTraceAsString() . PHP_EOL,
@@ -44,10 +51,12 @@ try {
     );
 
     try {
-        $response = new HtmlResponse($template->render('error/500.twig'), 404);
-    } catch (LoaderError | RuntimeError | SyntaxError $e) {
-        $response = new HtmlResponse("500 Internal Server Error", 500);
+        $html = $template->render('error/500.twig');
+    } catch (LoaderError | RuntimeError | SyntaxError) {
+        $html = "500 Internal Server Error";
     }
+
+    $response = new HtmlResponse($html, 500);
 }
 
 (new SapiEmitter())->emit($response);

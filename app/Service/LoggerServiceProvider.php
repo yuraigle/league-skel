@@ -16,9 +16,8 @@ class LoggerServiceProvider extends AbstractServiceProvider
 
     public function register(): void
     {
-        $root      = __DIR__ . '/../..';
         $log       = new Logger('app');
-        $handler   = new StreamHandler($root . '/logs/app.log');
+        $handler   = new StreamHandler($_ENV['ROOT'] . $_ENV['LOG_PATH']);
         $formatter = new LineFormatter(null, "Y-m-d H:i:s", true, true);
         $handler->setFormatter($formatter);
         $log->pushHandler($handler);
