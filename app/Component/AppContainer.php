@@ -10,6 +10,7 @@ use App\Service\LoggerServiceProvider;
 use App\Service\RouterServiceProvider;
 use App\Service\TemplateServiceProvider;
 use League\Container\Container as Psr11Container;
+use League\Route\Router as LeagueRouter;
 use Psr\Log\LoggerAwareInterface;
 use Twig\Environment as TemplateEngine;
 
@@ -22,6 +23,10 @@ class AppContainer
         $container->addServiceProvider(new LoggerServiceProvider());
         $container->addServiceProvider(new TemplateServiceProvider());
         $container->addServiceProvider(new RouterServiceProvider());
+
+        $container->add(AppDispatcher::class)
+            ->addArgument(LeagueRouter::class)
+            ->addArgument(TemplateEngine::class);
 
         // services
         $container->add(CitiesService::class);
