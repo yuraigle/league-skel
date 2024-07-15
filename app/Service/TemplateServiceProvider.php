@@ -3,7 +3,7 @@
 namespace App\Service;
 
 use League\Container\ServiceProvider\AbstractServiceProvider;
-use League\Plates\Engine as TemplateEngine;
+use Twig\Environment as TemplateEngine;
 
 class TemplateServiceProvider extends AbstractServiceProvider
 {
@@ -15,8 +15,11 @@ class TemplateServiceProvider extends AbstractServiceProvider
     public function register(): void
     {
         $root = __DIR__ . '/../..';
-        $template = new TemplateEngine($root . '/templates', 'tpl');
-        $template->addFolder('layout', $root . '/templates/layout');
-        $this->container->add(TemplateEngine::class, $template);
+
+        $loader = new \Twig\Loader\FilesystemLoader($root . '/templates');
+        $twig   = new \Twig\Environment($loader, [
+            'cache' => $root . '/cache',
+        ]);
+        $this->container->add(TemplateEngine::class, $twig);
     }
 }

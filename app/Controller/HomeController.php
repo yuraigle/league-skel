@@ -19,13 +19,13 @@ class HomeController extends AbstractController
     {
         $cities = $this->citiesService->getCities();
 
-        return $this->render("home", ['cities' => $cities]);
+        return $this->render("home.twig", ['cities' => $cities]);
     }
 
     public function hello(Psr7Request $request): Psr7Response
     {
         $name = $request->getAttribute('name', 'World');
 
-        return $this->render("hello", ['name' => $name]);
+        return $this->render("hello.twig", ['name' => $name]);
     }
 }

@@ -1,6 +1,6 @@
 <html lang="en">
 <head>
-    <title><?= $this->e($title) ?></title>
+    <title>{% block title %}{% endblock %}</title>
     <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
     <link rel="stylesheet" href="/app.css"/>
 </head>
@@ -13,10 +13,10 @@
     </ul>
 </nav>
 <main>
-    <?= $this->section('content') ?>
+    {% block content %}{% endblock %}
 </main>
 <footer>
-    <?= date('Y') ?>
+    {{ "now" | date("Y") }}
 </footer>
 </body>
 </html>

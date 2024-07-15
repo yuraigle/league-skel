@@ -1,8 +1,12 @@
-<?php $this->layout('layout::base', ['title' => 'Demo - About']) ?>
+{% extends "layout/base.twig" %}
 
+{% block title %}About - Demo{% endblock %}
+
+{% block content %}
 <h1>About</h1>
 
 <p>
 	Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio praesent libero sed cursus ante
 	dapibus diam. Sed nisi nulla quis sem at nibh elementum imperdiet.
 </p>
+{% endblock %}
