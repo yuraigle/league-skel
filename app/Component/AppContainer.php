@@ -24,12 +24,15 @@ class AppContainer
         $container->addServiceProvider(new TemplateServiceProvider());
         $container->addServiceProvider(new RouterServiceProvider());
 
+        $container->add(DbConnection::class);
+
         $container->add(AppDispatcher::class)
             ->addArgument(LeagueRouter::class)
             ->addArgument(TemplateEngine::class);
 
         // services
-        $container->add(CitiesService::class);
+        $container->add(CitiesService::class)
+            ->addArgument(DbConnection::class);
 
         // controllers
         $container->add(AboutController::class);

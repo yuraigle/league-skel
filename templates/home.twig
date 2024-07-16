@@ -7,7 +7,7 @@
 
     <ul>
         {% for city in cities %}
-            <li>{{ city }}</li>
+            <li>{{ city.name }}, {{ city.state_code }}</li>
         {% endfor %}
     </ul>
 {% endblock %}
