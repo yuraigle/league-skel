@@ -4,11 +4,12 @@ namespace App\Component;
 
 use App\Controller\AboutController;
 use App\Controller\AbstractController;
+use App\Controller\CitiesController;
 use App\Controller\HomeController;
+use App\Provider\LoggerServiceProvider;
+use App\Provider\RouterServiceProvider;
+use App\Provider\TemplateServiceProvider;
 use App\Service\CitiesService;
-use App\Service\LoggerServiceProvider;
-use App\Service\RouterServiceProvider;
-use App\Service\TemplateServiceProvider;
 use League\Container\Container as Psr11Container;
 use League\Route\Router as LeagueRouter;
 use Psr\Log\LoggerAwareInterface;
@@ -35,9 +36,12 @@ class AppContainer
             ->addArgument(DbConnection::class);
 
         // controllers
-        $container->add(AboutController::class);
+        $container->add(HomeController::class);
 
-        $container->add(HomeController::class)
+        $container->add(AboutController::class)
+            ->addArgument(DbConnection::class);
+
+        $container->add(CitiesController::class)
             ->addArgument(CitiesService::class);
 
         // All controllers can use the template engine

@@ -5,6 +5,7 @@ declare(strict_types=1);
 require __DIR__ . '/../vendor/autoload.php';
 
 use App\Controller\AboutController;
+use App\Controller\CitiesController;
 use App\Controller\HomeController;
 use Laminas\Diactoros\ServerRequestFactory;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
@@ -21,10 +22,11 @@ $router     = $container->get(LeagueRouter::class);
 $dispatcher = $container->get(App\Component\AppDispatcher::class);
 
 // Routes
-$router->get('/', [HomeController::class, 'index']);
-$router->get('/about', [AboutController::class, 'index']);
+$router->get('/', [HomeController::class, 'hello']);
 $router->get('/hello', [HomeController::class, 'hello']);
 $router->get('/hello/{name}', [HomeController::class, 'hello']);
+$router->get('/about', [AboutController::class, 'index']);
+$router->get('/cities', [CitiesController::class, 'index']);
 
 // Dispatch
 $request  = ServerRequestFactory::fromGlobals();

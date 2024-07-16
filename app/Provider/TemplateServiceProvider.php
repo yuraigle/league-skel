@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace App\Provider;
 
 use League\Container\ServiceProvider\AbstractServiceProvider;
 use Twig\Environment as TemplateEngine;
