@@ -16,7 +16,8 @@ class CitiesService
         $sql = <<<SQL
             select name, state_code, population
             from `geo_cities`
-            order by population desc limit 5
+            where population > 1000000
+            order by rand() desc limit 5
         SQL;
 
         $res = $this->db->getConn()->query($sql);

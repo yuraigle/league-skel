@@ -2,6 +2,7 @@
 
 namespace App\Provider;
 
+use App\Component\AppRoutes;
 use League\Container\ServiceProvider\AbstractServiceProvider;
 use League\Route\Router as LeagueRouter;
 use League\Route\Strategy\ApplicationStrategy;
@@ -20,6 +21,8 @@ class RouterServiceProvider extends AbstractServiceProvider
 
         $router = new LeagueRouter();
         $router->setStrategy($strategy);
+
+        (new AppRoutes())->registerRoutes($router);
 
         $this->container->add(LeagueRouter::class, $router);
     }
