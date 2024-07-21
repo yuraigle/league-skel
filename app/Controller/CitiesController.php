@@ -6,7 +6,6 @@ namespace App\Controller;
 
 use App\Service\CitiesService;
 use Psr\Http\Message\ResponseInterface as Psr7Response;
-use Psr\Http\Message\ServerRequestInterface as Psr7Request;
 
 class CitiesController extends AbstractController
 {
@@ -15,7 +14,7 @@ class CitiesController extends AbstractController
     ) {
     }
 
-    public function index(Psr7Request $request): Psr7Response
+    public function index(): Psr7Response
     {
         $cities = $this->citiesService->getCities();
 

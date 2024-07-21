@@ -9,10 +9,9 @@ use Psr\Http\Message\ServerRequestInterface as Psr7Request;
 
 class HomeController extends AbstractController
 {
-    public function hello(Psr7Request $request): Psr7Response
+    public function home(Psr7Request $request): Psr7Response
     {
-        $name = $request->getAttribute('name', 'World');
-
-        return $this->render("hello.twig", ['name' => $name]);
+        $name = $request->getAttribute("name", "World");
+        return $this->render("home.twig", ['name' => $name]);
     }
 }
