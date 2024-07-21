@@ -2,7 +2,7 @@
 
 namespace App\Component;
 
-use App\Controller\AboutController;
+use App\Controller\PagesController;
 use App\Controller\AbstractController;
 use App\Controller\CitiesController;
 use App\Controller\HomeController;
@@ -38,8 +38,7 @@ class AppContainer
         // controllers
         $container->add(HomeController::class);
 
-        $container->add(AboutController::class)
-            ->addArgument(DbConnection::class);
+        $container->add(PagesController::class);
 
         $container->add(CitiesController::class)
             ->addArgument(CitiesService::class);
