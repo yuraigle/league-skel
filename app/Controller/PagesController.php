@@ -18,6 +18,9 @@ class PagesController extends AbstractController
 
     public function terms(): Psr7Response
     {
-        return $this->render("pages/terms.twig");
+        return $this->render(
+            "pages/terms.twig",
+            ["site_name" => $_ENV['SITE_NAME']]
+        );
     }
 }

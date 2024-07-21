@@ -17,11 +17,13 @@ nav > ul {
 }
 
 main {
-    padding: 0 20px;
     flex-grow: 1;
+    max-width: 1200px;
+    padding: 0 20px;
 }
 
 footer {
     border-top: 1px solid #ccc;
     padding: 20px;
+    text-align: center;
 }
