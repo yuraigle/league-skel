@@ -2,16 +2,19 @@
 
 namespace App\Component;
 
-use App\Controller\PagesController;
 use App\Controller\AbstractController;
 use App\Controller\CitiesController;
 use App\Controller\HomeController;
+use App\Controller\PagesController;
 use App\Provider\LoggerServiceProvider;
+use App\Provider\RequestServiceProvider;
 use App\Provider\RouterServiceProvider;
 use App\Provider\TemplateServiceProvider;
 use App\Service\CitiesService;
 use League\Container\Container as Psr11Container;
 use League\Route\Router as LeagueRouter;
+use Monolog\Logger;
+use Psr\Http\Message\ServerRequestInterface as Psr7Request;
 use Psr\Log\LoggerAwareInterface;
 use Twig\Environment as TemplateEngine;
 
@@ -23,6 +26,7 @@ class AppContainer
 
         $container->addServiceProvider(new LoggerServiceProvider());
         $container->addServiceProvider(new TemplateServiceProvider());
+        $container->addServiceProvider(new RequestServiceProvider());
         $container->addServiceProvider(new RouterServiceProvider());
 
         $container->add(DbConnection::class);
@@ -44,13 +48,12 @@ class AppContainer
             ->addArgument(CitiesService::class);
 
         // All controllers can use the template engine
-        $container
-            ->inflector(AbstractController::class)
+        $container->inflector(AbstractController::class)
+            ->invokeMethod('setRequest', [Psr7Request::class])
             ->invokeMethod('setTemplate', [TemplateEngine::class]);
 
-        $container
-            ->inflector(LoggerAwareInterface::class)
-            ->invokeMethod('setLogger', [\Monolog\Logger::class]);
+        $container->inflector(LoggerAwareInterface::class)
+            ->invokeMethod('setLogger', [Logger::class]);
 
         return $container;
     }

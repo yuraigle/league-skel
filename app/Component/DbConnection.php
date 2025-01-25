@@ -2,12 +2,15 @@
 
 namespace App\Component;
 
+use mysqli;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
+use RuntimeException;
+use Throwable;
 
 class DbConnection implements LoggerAwareInterface
 {
-    private static \mysqli | null $conn = null;
+    private static mysqli|null $conn = null;
     private LoggerInterface $logger;
 
     public function setLogger(LoggerInterface $logger): void
@@ -15,22 +18,22 @@ class DbConnection implements LoggerAwareInterface
         $this->logger = $logger;
     }
 
-    public function getConn(): \mysqli
+    public function getConn(): mysqli
     {
         if (self::$conn) {
             return self::$conn;
         }
 
         try {
-            self::$conn = new \mysqli(
+            self::$conn = new mysqli(
                 $_ENV['DB_HOST'],
                 $_ENV['DB_USER'],
                 $_ENV['DB_PASS'],
                 $_ENV['DB_NAME']
             );
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $this->logger->critical("DB DOWN: " . $e->getMessage());
-            throw new \RuntimeException($e->getMessage());
+            throw new RuntimeException($e->getMessage());
         }
 
         return self::$conn;
