@@ -1,0 +1,26 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+<h1>Login</h1>
+<form method="post">
+    {% if error %}
+    <div style="color: red">{{ error }}</div>
+    {% endif %}
+
+    <div>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" value="{{ form.username }}" required>
+    </div>
+
+    <div>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" value="{{ form.password }}" required>
+    </div>
+
+    <button type="submit">Login</button>
+</form>
+</body>
+</html>

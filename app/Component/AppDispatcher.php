@@ -5,6 +5,7 @@ namespace App\Component;
 use League\Route\Http\Exception\BadRequestException;
 use League\Route\Http\Exception\ForbiddenException;
 use League\Route\Http\Exception\NotFoundException;
+use League\Route\Http\Exception\UnauthorizedException;
 use League\Route\Router as LeagueRouter;
 use Nyholm\Psr7\Response;
 use Psr\Http\Message\ResponseInterface as Psr7Response;
@@ -39,6 +40,9 @@ class AppDispatcher implements LoggerAwareInterface
         } catch (BadRequestException) {
             $html = $this->renderSafe('error/400.twig', '400 Bad Request');
             return new Response(400, [], $html);
+        } catch (UnauthorizedException) {
+            $html = $this->renderSafe('error/401.twig', '401 Unauthorized');
+            return new Response(401, [], $html);
         } catch (ForbiddenException) {
             $html = $this->renderSafe('error/403.twig', '403 Forbidden');
             return new Response(403, [], $html);
@@ -60,7 +64,7 @@ class AppDispatcher implements LoggerAwareInterface
     {
         try {
             return $this->template->render($tpl);
-        } catch (LoaderError | RuntimeError | SyntaxError $e) {
+        } catch (LoaderError|RuntimeError|SyntaxError $e) {
             $this->logger->error($e->getMessage());
             return $fallback;
         }

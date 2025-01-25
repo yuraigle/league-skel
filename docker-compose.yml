@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb-compose
+    environment:
+      MYSQL_ROOT_PASSWORD: super1SECRET@
+      MYSQL_DATABASE: app_db
+    ports:
+      - "3306:3306"
+    networks:
+      - mariadb_network
+
+networks:
+  mariadb_network:
+    driver: bridge

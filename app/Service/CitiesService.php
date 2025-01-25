@@ -15,7 +15,7 @@ class CitiesService
     {
         $sql = <<<SQL
             select name, state_code, population
-            from `geo_cities`
+            from `cities`
             where population > 1000000
             order by rand() desc limit 5
         SQL;

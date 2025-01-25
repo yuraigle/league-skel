@@ -38,6 +38,21 @@ abstract class AbstractController implements LoggerAwareInterface
         $this->request = $request;
     }
 
+    public function getAuth(): ?array
+    {
+        $authCookie = $this->request->getCookieParams()['auth'] ?? null;
+        $authCookieSign = $this->request->getCookieParams()['auth_sign'] ?? null;
+
+        if ($authCookie && $authCookieSign) {
+            $validSign = hash_hmac('sha256', $authCookie, $_ENV['COOKIE_SECRET']);
+            if ($validSign === $authCookieSign) {
+                return json_decode(base64_decode($authCookie), true);
+            }
+        }
+
+        return null;
+    }
+
     protected function render($view, $args = []): Psr7Response
     {
         try {
