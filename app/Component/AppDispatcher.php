@@ -2,10 +2,7 @@
 
 namespace App\Component;
 
-use League\Route\Http\Exception\BadRequestException;
-use League\Route\Http\Exception\ForbiddenException;
-use League\Route\Http\Exception\NotFoundException;
-use League\Route\Http\Exception\UnauthorizedException;
+use League\Route\Http\Exception\HttpExceptionInterface;
 use League\Route\Router as LeagueRouter;
 use Nyholm\Psr7\Response;
 use Psr\Http\Message\ResponseInterface as Psr7Response;
@@ -37,21 +34,13 @@ class AppDispatcher implements LoggerAwareInterface
     {
         try {
             return $this->router->dispatch($request);
-        } catch (BadRequestException) {
-            $html = $this->renderSafe('error/400.twig', '400 Bad Request');
-            return new Response(400, [], $html);
-        } catch (UnauthorizedException) {
-            $html = $this->renderSafe('error/401.twig', '401 Unauthorized');
-            return new Response(401, [], $html);
-        } catch (ForbiddenException) {
-            $html = $this->renderSafe('error/403.twig', '403 Forbidden');
-            return new Response(403, [], $html);
-        } catch (NotFoundException) {
-            $html = $this->renderSafe('error/404.twig', '404 Not Found');
-            return new Response(404, [], $html);
+        } catch (HttpExceptionInterface $e) {
+            $httpCode = $e->getStatusCode();
+            $html = $this->renderSafe("error/$httpCode.twig", $httpCode);
+            return new Response($httpCode, [], $html);
         } catch (Throwable $e) {
             $this->logger->error(
-                $e->getMessage(), // . PHP_EOL . $e->getTraceAsString() . PHP_EOL,
+                $e->getMessage() . PHP_EOL . $e->getTraceAsString() . PHP_EOL,
                 ['uri' => $request->getUri()->getPath()]
             );
 

@@ -18,7 +18,6 @@ class AppRoutes
         $router->post('/login', [AuthController::class, 'loginPost']);
         $router->get('/logout', [AuthController::class, 'logout']);
 
-        $router->get('/about', [PagesController::class, 'about']);
         $router->get('/terms', [PagesController::class, 'terms']);
         $router->get('/cities', [CitiesController::class, 'index']);
 

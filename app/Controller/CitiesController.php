@@ -18,6 +18,6 @@ class CitiesController extends AbstractController
     {
         $cities = $this->citiesService->getCities();
 
-        return $this->render("cities.twig", ['cities' => $cities]);
+        return $this->render("cities/index.twig", ['cities' => $cities]);
     }
 }

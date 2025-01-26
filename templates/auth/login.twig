@@ -2,12 +2,55 @@
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
+
+    <style>
+        * {
+            font-family: sans-serif;
+        }
+
+        .logo {
+            display: block;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .login-form {
+            max-width: 400px;
+            margin: 80px auto;
+        }
+
+        .login-form input, .login-form button {
+            width: 100%;
+            padding: 10px 15px;
+            margin-bottom: 10px;
+        }
+
+        .alert-error {
+            background-color: lightcoral;
+            border: 1px solid darkred;
+            color: darkred;
+            padding: 20px 30px;
+            margin: 20px 0;
+        }
+
+        .alert-error span {
+            float: right;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-<h1>Login</h1>
-<form method="post">
+<form class="login-form" method="post">
+
+    <a href="/" class="logo" title="Home">
+        {% include 'icons/logo.twig' with {'size': '60px'} %}
+    </a>
+
     {% if error %}
-    <div style="color: red">{{ error }}</div>
+        <div class="alert-error">
+            <span onclick="this.parentElement.remove()">&times;</span>
+            {{ error }}
+        </div>
     {% endif %}
 
     <div>
