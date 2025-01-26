@@ -40,5 +40,4 @@ class AuthService
 
         throw new Exception("No user found");
     }
-
 }
