@@ -11,9 +11,7 @@ use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Throwable;
 use Twig\Environment as TemplateEngine;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
+use Twig\Error\Error as TwigError;
 
 class AppDispatcher implements LoggerAwareInterface
 {
@@ -35,27 +33,25 @@ class AppDispatcher implements LoggerAwareInterface
         try {
             return $this->router->dispatch($request);
         } catch (HttpExceptionInterface $e) {
-            $httpCode = $e->getStatusCode();
-            $html = $this->renderSafe("error/$httpCode.twig", $httpCode);
-            return new Response($httpCode, [], $html);
+            return $this->renderHttpException($e->getStatusCode());
         } catch (Throwable $e) {
             $this->logger->error(
                 $e->getMessage() . PHP_EOL . $e->getTraceAsString() . PHP_EOL,
                 ['uri' => $request->getUri()->getPath()]
             );
 
-            $html = $this->renderSafe('error/500.twig', '500 Server Error');
-            return new Response(500, [], $html);
+            return $this->renderHttpException(500);
         }
     }
 
-    private function renderSafe(string $tpl, string $fallback = ''): string
+    private function renderHttpException(int $code): Response
     {
         try {
-            return $this->template->render($tpl);
-        } catch (LoaderError|RuntimeError|SyntaxError $e) {
+            $html = $this->template->render("error/$code.twig");
+            return new Response($code, [], $html);
+        } catch (TwigError $e) {
             $this->logger->error($e->getMessage());
-            return $fallback;
+            return new Response($code, [], "HTTP $code");
         }
     }
 }

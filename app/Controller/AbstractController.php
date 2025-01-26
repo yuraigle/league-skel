@@ -8,9 +8,7 @@ use Psr\Http\Message\ServerRequestInterface as Psr7Request;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Twig\Environment as TemplateEngine;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
+use Twig\Error\Error as TwigError;
 
 abstract class AbstractController implements LoggerAwareInterface
 {
@@ -59,14 +57,13 @@ abstract class AbstractController implements LoggerAwareInterface
             $html = $this->template->render($view, $args);
 
             return new Response(200, [], $html);
-        } catch (LoaderError|RuntimeError|SyntaxError $e) {
+        } catch (TwigError $e) {
             $this->logger->error($e->getMessage());
 
             try {
                 $html = $this->template->render('error/500.twig');
-            } catch (LoaderError|RuntimeError|SyntaxError $e) {
-                $this->logger->error($e->getMessage());
-                $html = "500 Internal Server Error";
+            } catch (TwigError) {
+                $html = "500 Server Error";
             }
 
             return new Response(500, [], $html);
