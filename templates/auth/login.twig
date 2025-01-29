@@ -22,7 +22,6 @@
         .login-form input, .login-form button {
             width: 100%;
             padding: 10px 15px;
-            margin-bottom: 10px;
         }
 
         .alert-error {
@@ -37,6 +36,10 @@
             float: right;
             cursor: pointer;
         }
+
+        .mb-2 {
+            margin-bottom: 8px;
+        }
     </style>
 </head>
 <body>
@@ -46,19 +49,23 @@
         {% include 'icons/logo.twig' with {'size': '60px'} %}
     </a>
 
-    {% if error %}
+    {% if messages %}
         <div class="alert-error">
             <span onclick="this.parentElement.remove()">&times;</span>
-            {{ error }}
+            <ul>
+                {% for k, message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
         </div>
     {% endif %}
 
-    <div>
+    <div class="mb-2">
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" value="{{ form.username }}" required>
     </div>
 
-    <div>
+    <div class="mb-2">
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" value="{{ form.password }}" required>
     </div>
