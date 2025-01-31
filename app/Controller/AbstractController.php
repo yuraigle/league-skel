@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use Ahc\Jwt\JWTException;
+use App\Service\AuthService;
 use Nyholm\Psr7\Response;
 use Psr\Http\Message\ResponseInterface as Psr7Response;
 use Psr\Http\Message\ServerRequestInterface as Psr7Request;
@@ -38,13 +40,12 @@ abstract class AbstractController implements LoggerAwareInterface
 
     public function getAuth(): ?array
     {
-        $authCookie = $this->request->getCookieParams()['auth'] ?? null;
-        $authCookieSign = $this->request->getCookieParams()['auth_sign'] ?? null;
+        $token = $this->request->getCookieParams()['auth'] ?? null;
 
-        if ($authCookie && $authCookieSign) {
-            $validSign = hash_hmac('sha256', $authCookie, $_ENV['COOKIE_SECRET']);
-            if ($validSign === $authCookieSign) {
-                return json_decode(base64_decode($authCookie), true);
+        if ($token) {
+            try {
+                return AuthService::parseJwt($token);
+            } catch (JWTException) {
             }
         }
 
@@ -68,5 +69,31 @@ abstract class AbstractController implements LoggerAwareInterface
 
             return new Response(500, [], $html);
         }
+    }
+
+    protected function redirect(string $url, int $code = 302): Psr7Response
+    {
+        return new Response($code, ['Location' => $url]);
+    }
+
+    protected function json($data): Psr7Response
+    {
+        return new Response(200, ['Content-Type' => 'application/json'], json_encode($data));
+    }
+
+    protected function cookie(string $name, string $value, int $maxAge = null): string
+    {
+        if ($maxAge === null) {
+            $maxAge = $_ENV['COOKIE_LIFETIME'];
+        }
+
+        $expires = gmdate("D, d M Y H:i:s \G\M\T", time() + $maxAge);
+
+        return sprintf(
+            '%s=%s; path=/; Secure; HttpOnly; SameSite=strict; Expires=%s',
+            $name,
+            $value,
+            $expires
+        );
     }
 }

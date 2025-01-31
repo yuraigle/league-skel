@@ -30,7 +30,6 @@ class AppContainer
         $container->addServiceProvider(new TemplateServiceProvider());
         $container->addServiceProvider(new RequestServiceProvider());
         $container->addServiceProvider(new RouterServiceProvider());
-
         $container->add(DbConnection::class);
 
         $container->add(AppDispatcher::class)

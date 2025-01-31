@@ -2,14 +2,36 @@
 
 namespace App\Service;
 
+use Ahc\Jwt\JWT;
 use App\Component\DbConnection;
 use Exception;
 
 class AuthService
 {
+    private static JWT $jwt;
+
     public function __construct(
         private readonly DbConnection $db
     ) {
+    }
+
+    public static function generateJwt(array $payload): string
+    {
+        return self::getJwt()->encode($payload);
+    }
+
+    private static function getJwt(): JWT
+    {
+        if (!isset(self::$jwt)) {
+            self::$jwt = new JWT($_ENV['COOKIE_SECRET'], 'HS256', $_ENV['COOKIE_LIFETIME']);
+        }
+
+        return self::$jwt;
+    }
+
+    public static function parseJwt(string $token): array
+    {
+        return self::getJwt()->decode($token);
     }
 
     /**

@@ -10,14 +10,15 @@
   "require": {
     "php": ">=8.1",
     "ext-mysqli": "*",
+    "adhocore/jwt": "^1.1",
+    "laminas/laminas-httphandlerrunner": "^2.11",
     "league/container": "^4.2",
     "league/route": "^5.1",
     "nyholm/psr7": "^1.8",
     "nyholm/psr7-server": "^1.1",
-    "laminas/laminas-httphandlerrunner": "^2.11",
     "monolog/monolog": "^3.8",
     "respect/validation": "^2.4",
-    "twig/twig": "^3.18",
+    "twig/twig": "^3.19",
     "vlucas/phpdotenv": "^5.6"
   },
   "autoload": {
