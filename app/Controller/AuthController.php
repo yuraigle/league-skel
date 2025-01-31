@@ -22,11 +22,11 @@ class AuthController extends AbstractController
 
     public function loginPost(): Psr7Response
     {
-        $form = $this->getRequest()->getParsedBody();
+        $form = json_decode($this->getRequest()->getBody(), true);
 
-        // just an example of form validation
+        // a backend validation example
         $formValidator = v::arrayType()
-            ->key('username', v::stringType()->notBlank()->length(5, 20))
+            ->key('username', v::stringType()->notBlank()->alnum()->length(5, 20))
             ->key('password', v::stringType()->notBlank()->length(5, 20));
 
         try {
@@ -34,18 +34,14 @@ class AuthController extends AbstractController
             $auth = $this->authService->authenticate($form['username'], $form['password']);
             $jwt = AuthService::generateJwt($auth);
 
-            return $this->redirect('/', 303)
+            return $this->json(['status' => 'success', 'redirect' => '/'])
                 ->withAddedHeader('Set-Cookie', $this->cookie('auth', $jwt));
         } catch (NestedValidationException $e) {
-            return $this->render("auth/login.twig", [
-                "messages" => $e->getMessages(),
-                "form" => $form,
-            ]);
+            $msg = array_values($e->getMessages())[0] ?? 'Invalid form data.';
+            return $this->json(['status' => 'error', 'message' => $msg])->withStatus(400);
         } catch (Exception $e) {
-            return $this->render("auth/login.twig", [
-                "messages" => [$e->getMessage()],
-                "form" => $form,
-            ]);
+            $msg = $e->getMessage() ?? 'Authentication failed.';
+            return $this->json(['status' => 'error', 'message' => $msg])->withStatus(401);
         }
     }
 

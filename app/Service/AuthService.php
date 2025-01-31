@@ -49,17 +49,10 @@ class AuthService
         }
 
         $result = $stmt->get_result();
-
-        if ($result->num_rows === 0) {
-            throw new Exception("Wrong credentials");
-        }
-
-        $row = $result->fetch_assoc();
-
-        if ($row && $row['id']) {
+        if ($row = $result->fetch_assoc()) {
             return $row;
         }
 
-        throw new Exception("No user found");
+        throw new Exception("Wrong credentials");
     }
 }
