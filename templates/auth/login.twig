@@ -45,7 +45,7 @@
             </p>
         </div>
 
-        <button class="btn btn-primary" type="submit">Login</button>
+        <button class="btn btn-primary" type="submit" :disabled="processing">Login</button>
     </form>
 </div>
 
@@ -55,7 +55,7 @@
     const {helpers: {withMessage, regex}, required, minLength, maxLength} = VuelidateValidators;
 
     createApp({
-        delimiters: ['${', '}'],
+        delimiters: ['${', '}'], // default conflicts with twig
         setup() {
             const message = ref('')
             const processing = ref(false)
