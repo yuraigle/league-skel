@@ -21,6 +21,6 @@ class AppRoutes
         $router->get('/terms', [PagesController::class, 'terms']);
         $router->get('/cities', [CitiesController::class, 'index']);
 
-        $router->get('/secure', [PagesController::class, 'secured']);
+        $router->get('/dashboard', [PagesController::class, 'dashboard']);
     }
 }

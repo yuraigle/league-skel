@@ -23,15 +23,13 @@ class PagesController extends AbstractController
     /**
      * @throws UnauthorizedException
      */
-    public function secured(): Psr7Response
+    public function dashboard(): Psr7Response
     {
         $auth = $this->getAuth();
         if (!$auth) {
             throw new UnauthorizedException();
         }
 
-        return $this->render("pages/secured.twig", [
-            "username" => $auth['username']
-        ]);
+        return $this->render("pages/dashboard.twig");
     }
 }

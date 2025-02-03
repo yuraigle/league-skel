@@ -55,6 +55,9 @@ abstract class AbstractController implements LoggerAwareInterface
     protected function render($view, $args = []): Psr7Response
     {
         try {
+            $this->template->addGlobal('auth', $this->getAuth());
+            $this->template->addGlobal('request', $this->getRequest());
+
             $html = $this->template->render($view, $args);
 
             return new Response(200, [], $html);
