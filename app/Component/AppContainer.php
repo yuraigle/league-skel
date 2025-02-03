@@ -7,6 +7,7 @@ use App\Controller\AuthController;
 use App\Controller\CitiesController;
 use App\Controller\HomeController;
 use App\Controller\PagesController;
+use App\Provider\DatabaseServiceProvider;
 use App\Provider\LoggerServiceProvider;
 use App\Provider\RequestServiceProvider;
 use App\Provider\RouterServiceProvider;
@@ -16,6 +17,7 @@ use App\Service\CitiesService;
 use League\Container\Container as Psr11Container;
 use League\Route\Router as LeagueRouter;
 use Monolog\Logger;
+use PDO;
 use Psr\Http\Message\ServerRequestInterface as Psr7Request;
 use Psr\Log\LoggerAwareInterface;
 use Twig\Environment as TemplateEngine;
@@ -30,15 +32,15 @@ class AppContainer
         $container->addServiceProvider(new TemplateServiceProvider());
         $container->addServiceProvider(new RequestServiceProvider());
         $container->addServiceProvider(new RouterServiceProvider());
-        $container->add(DbConnection::class);
+        $container->addServiceProvider(new DatabaseServiceProvider());
 
         $container->add(AppDispatcher::class)
             ->addArgument(LeagueRouter::class)
             ->addArgument(TemplateEngine::class);
 
         // services
-        $container->add(AuthService::class)->addArgument(DbConnection::class);
-        $container->add(CitiesService::class)->addArgument(DbConnection::class);
+        $container->add(AuthService::class)->addArgument(PDO::class);
+        $container->add(CitiesService::class)->addArgument(PDO::class);
 
         // controllers
         $container->add(HomeController::class);

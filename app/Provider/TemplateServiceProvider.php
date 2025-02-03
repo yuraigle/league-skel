@@ -16,9 +16,10 @@ class TemplateServiceProvider extends AbstractServiceProvider
     public function register(): void
     {
         $templatesPath = $_ENV['ROOT'] . '/templates';
-        $cachePath     = $_ENV['DEV_MODE'] ? false : $_ENV['ROOT'] . '/cache';
-        $loader        = new FilesystemLoader($templatesPath);
-        $twig          = new TemplateEngine($loader, ['cache' => $cachePath]);
+        $cachePath = $_ENV['DEV_MODE'] ? false : $_ENV['ROOT'] . '/cache';
+        $loader = new FilesystemLoader($templatesPath);
+        $twig = new TemplateEngine($loader, ['cache' => $cachePath]);
+
         $this->container->add(TemplateEngine::class, $twig);
     }
 }

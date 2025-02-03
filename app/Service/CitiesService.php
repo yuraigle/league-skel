@@ -2,12 +2,12 @@
 
 namespace App\Service;
 
-use App\Component\DbConnection;
+use PDO;
 
 class CitiesService
 {
     public function __construct(
-        private readonly DbConnection $db
+        private readonly PDO $pdo
     ) {
     }
 
@@ -20,8 +20,9 @@ class CitiesService
             order by rand() desc limit 5
         SQL;
 
-        $res = $this->db->getConn()->query($sql);
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
 
-        return $res->fetch_all(MYSQLI_ASSOC);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

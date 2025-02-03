@@ -3,15 +3,15 @@
 namespace App\Service;
 
 use Ahc\Jwt\JWT;
-use App\Component\DbConnection;
 use Exception;
+use PDO;
 
 class AuthService
 {
     private static JWT $jwt;
 
     public function __construct(
-        private readonly DbConnection $db
+        private readonly PDO $pdo
     ) {
     }
 
@@ -40,16 +40,10 @@ class AuthService
     public function authenticate(string $user, string $pass): array
     {
         $sql = "select id, username, password from `users` where username = ?";
-        $stmt = $this->db->getConn()->prepare($sql);
-        $stmt->bind_param("s", $user);
-        $stmt->execute();
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$user]);
 
-        if ($stmt->error) {
-            throw new Exception($stmt->error);
-        }
-
-        $result = $stmt->get_result();
-        if ($row = $result->fetch_assoc()) {
+        if ($row = $stmt->fetch()) {
             if (password_verify($pass, $row['password'])) {
                 return ['id' => $row['id'], 'username' => $row['username']];
             }
@@ -63,41 +57,12 @@ class AuthService
      */
     public function createTestUser(string $username, string $password): int
     {
-        if ($this->isUsernameTaken($username)) {
-            throw new Exception("Username already taken.");
-        }
-
         $passHash = password_hash($password, PASSWORD_DEFAULT);
 
         $sql = "insert into `users` (username, password) values (?, ?)";
-        $stmt = $this->db->getConn()->prepare($sql);
-        $stmt->bind_param("ss", $username, $passHash);
-        $stmt->execute();
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$username, $passHash]);
 
-        return $stmt->insert_id;
-    }
-
-    private function isUsernameTaken(string $username): bool
-    {
-        $sql = "select id from `users` where username = ?";
-        $stmt = $this->db->getConn()->prepare($sql);
-        $stmt->bind_param("s", $username);
-        $stmt->execute();
-
-        return $stmt->get_result()->num_rows > 0;
-    }
-
-    public function isUsersTableEmpty(): bool
-    {
-        $sql = "select count(*) as cnt from `users`";
-        $stmt = $this->db->getConn()->prepare($sql);
-        $stmt->execute();
-
-        $result = $stmt->get_result();
-        if ($row = $result->fetch_assoc()) {
-            return $row['cnt'] === 0;
-        }
-
-        return false;
+        return $this->pdo->lastInsertId();
     }
 }
