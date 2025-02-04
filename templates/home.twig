@@ -3,5 +3,13 @@
 {% block title %}Home - Demo{% endblock %}
 
 {% block content %}
+
+    <script type="module" src="{{ asset('vendor') }}"></script>
+    <script type="module" src="{{ asset('main') }}"></script>
+
     <h1>Hello {{ name }}!</h1>
+
+    <div class="vue-app">
+        <hello-world></hello-world>
+    </div>
 {% endblock %}

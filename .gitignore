@@ -3,3 +3,6 @@ logs/
 vendor/
 cache/
 .env
+
+node_modules
+dist/
